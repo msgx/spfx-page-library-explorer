@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2020/02/ProvisioningSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.dev.office.com/PnP/2020/02/ProvisioningSchema https://raw.githubusercontent.com/OfficeDev/PnP-Provisioning-Schema/master/OfficeDevPnP.ProvisioningSchema/ProvisioningSchema-2020-02.xsd">
+  <pnp:Preferences Version="1.0" />
+  <pnp:Templates ID="container-root-site">
+    <pnp:ProvisioningTemplate ID="template-root-site" Version="1.0" BaseSiteTemplate="SITEPAGEPUBLISHING#0" Scope="RootSite">
+      <pnp:WebSettings SiteLogo="{sitecollection}/SiteAssets/sitelogo.svg" />
+      <pnp:Files>
+        <pnp:File Src="images/sitelogo.svg" Folder="{sitecollection}/SiteAssets" Overwrite="false" Level="Published" />
+      </pnp:Files>
+    </pnp:ProvisioningTemplate>
+  </pnp:Templates>
+</pnp:Provisioning>

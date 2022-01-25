@@ -1,0 +1,27 @@
+# logs
+logs/
+*.log
+npm-debug.log*
+
+# dependency directories
+node_modules/
+
+# generated files
+dist/
+lib/
+solution/
+release/
+temp/
+*.sppkg
+*.resx.ts
+*.scss.ts
+*.scss.d.ts
+
+# environment/service directories and files
+.DS_Store
+.ntvs_analysis.dat
+.vs/
+bin/
+obj/
+coverage/
+*.swp

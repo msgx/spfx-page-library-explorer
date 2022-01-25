@@ -1,0 +1,20 @@
+{
+	"$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+	"id": "d834ef17-b24f-41d9-ac82-525f0bcccc50",
+	"alias": "ExplorerWebPart",
+	"componentType": "WebPart",
+	"version": "*",
+	"manifestVersion": 2,
+	"requiresCustomScript": false,
+	"supportsThemeVariants": true,
+	"preconfiguredEntries": [
+		{
+			"groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+			"group": { "default": "Other" },
+			"title": { "default": "Page library explorer" },
+			"description": { "default": "Views the current site's page library." },
+			"officeFabricIconFontName": "FabricDocLibrary",
+			"properties": {}
+		}
+	]
+}

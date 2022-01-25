@@ -1,0 +1,31 @@
+parameters:
+  - name: publishSpfxPackage
+    type: boolean
+    default: false
+  - name: publishProvisioningFiles
+    type: boolean
+    default: false
+
+steps:
+  # copy package file to the drop folder
+  - ${{ if eq(parameters.publishSpfxPackage, true) }}:
+    - task: CopyFiles@2
+      displayName: Copy package file
+      inputs:
+        contents: sharepoint/solution/*.sppkg
+        targetFolder: $(Build.StagingDirectory)/$(Explorer.DropFolder)
+  # copy provisioning files to the drop folder
+  - ${{ if eq(parameters.publishProvisioningFiles, true) }}:
+    - task: CopyFiles@2
+      displayName: Copy provisioning files
+      inputs:
+        contents: |
+          pipelines/scripts/**
+          pipelines/pnp/**
+        targetFolder: $(Build.StagingDirectory)/$(Explorer.DropFolder)
+  # share build artifact
+  - ${{ if or(eq(parameters.publishSpfxPackage, true), eq(parameters.publishProvisioningFiles, true)) }}:
+    - task: PublishBuildArtifacts@1
+      displayName: Publish build artifact
+      inputs:
+        pathToPublish: $(Build.StagingDirectory)/$(Explorer.DropFolder)

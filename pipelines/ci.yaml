@@ -1,0 +1,36 @@
+trigger: none
+
+variables:
+  - template: templates/variables.yaml
+  - group: deployment
+
+stages:
+  - stage: build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - template: templates/build.yaml
+  - stage: dev_deploy
+    displayName: Deploy to DEV
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - deployment:
+        displayName: Deploy SPFx solution
+        environment: DEV
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  displayName: Ensure PnP PowerShell installed
+                  inputs:
+                    filePath: $(Pipeline.Workspace)/$(Explorer.DropFolder)/pipelines/scripts/ensure-pnp-powershell.ps1
+                    errorActionPreference: stop
+                - task: PowerShell@2
+                  displayName: Install SPFx package
+                  inputs:
+                    filePath: $(Pipeline.Workspace)/$(Explorer.DropFolder)/pipelines/scripts/install-package.ps1
+                    arguments: -package '$(Pipeline.Workspace)/$(Explorer.DropFolder)/sharepoint/solution/$(Explorer.PackageName)' -url '$(Explorer.Deploy.SiteUrl)' -login '$(Explorer.Deploy.ClientId)' -password '$(Explorer.Deploy.ClientSecret)'
+                    errorActionPreference: stop

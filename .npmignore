@@ -1,0 +1,14 @@
+!dist/
+
+config/
+src/
+temp/
+release/
+.vscode/
+
+gulpfile.js
+tsconfig.json
+tslint.json
+.yo-rc.json
+
+*.log

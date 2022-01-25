@@ -1,0 +1,31 @@
+{
+	"printWidth": 150,
+	"useTabs": true,
+	"tabWidth": 3,
+	"arrowParens": "avoid",
+	"semi": true,
+	"quoteProps": "consistent",
+	"singleQuote": false,
+	"jsxSingleQuote": false,
+	"jsxBracketSameLine": true,
+	"bracketSpacing": true,
+	"trailingComma": "none",
+	"proseWrap": "never",
+	"requirePragma": false,
+	"insertPragma": false,
+	"overrides": [
+		{
+			"files": "*.xml",
+			"options": {
+				"printWidth": 1000
+			}
+		},
+		{
+			"files": "*.yaml",
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		}
+	]
+}

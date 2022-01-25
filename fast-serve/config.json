@@ -1,0 +1,12 @@
+{
+	"$schema": "https://raw.githubusercontent.com/s-KaiNet/spfx-fast-serve/master/schema/config.latest.schema.json",
+	"cli": {
+		"isLibraryComponent": false
+	},
+	"serve": {
+		"openUrl": "https://spnx.sharepoint.com/sites/kb/_layouts/workbench.aspx",
+		"loggingLevel": "normal",
+		"hotRefresh": false,
+		"eslint": false
+	}
+}

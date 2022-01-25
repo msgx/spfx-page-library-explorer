@@ -1,0 +1,5 @@
+variables:
+  Explorer.PackageName: spfx-explorer.sppkg
+  Explorer.DropFolder: drop
+  PNPPOWERSHELL_DISABLETELEMETRY: true
+  PNPPOWERSHELL_UPDATECHECK: false

@@ -1,0 +1,56 @@
+parameters:
+  - name: useProductionBuild
+    type: boolean
+    default: true
+  - name: skipBuildJob
+    type: boolean
+    default: false
+  - name: skipPublish
+    type: boolean
+    default: false
+
+jobs:
+  - ${{ if eq(parameters.skipBuildJob, false) }}:
+    - job: build
+      displayName: Make a build
+      steps:
+        # SPFx requires Node 10.x
+        - task: NodeTool@0
+          displayName: Use Node 10
+          inputs:
+            versionSpec: 10.x
+        # install npm packages with a clean slate
+        - task: Npm@1
+          displayName: Install npm packages
+          inputs:
+            command: ci
+            verbose: false
+        # compile and bundle
+        - task: gulp@0
+          displayName: Bundle SPFx solution
+          inputs:
+            targets: bundle
+            ${{ if eq(parameters.useProductionBuild, true) }}:
+              arguments: --ship
+        # create a package
+        - task: gulp@0
+          displayName: Package SPFx solution
+          inputs:
+            targets: package-solution
+            ${{ if eq(parameters.useProductionBuild, true) }}:
+              arguments: --ship
+        # publish package and provisioning files
+        - ${{ if eq(parameters.skipPublish, false) }}:
+          - template: publish.yaml
+            parameters:
+              publishSpfxPackage: true
+              publishProvisioningFiles: true
+
+  # publish provisioning files
+  - ${{ if and(eq(parameters.skipPublish, false), eq(parameters.skipBuildJob, true)) }}:
+    - job: publish
+      displayName: Publish provisioning files
+      steps:
+        - template: publish.yaml
+          parameters:
+            publishProvisioningFiles: true
