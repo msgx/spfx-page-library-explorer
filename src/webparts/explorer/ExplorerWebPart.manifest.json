@@ -14,7 +14,10 @@
 			"title": { "default": "Page library explorer" },
 			"description": { "default": "Views the current site's page library." },
 			"officeFabricIconFontName": "FabricDocLibrary",
-			"properties": {}
+			"properties": {
+				"pageContentTypeId": null,
+				"taxonomyFieldName": null
+			}
 		}
 	]
 }
