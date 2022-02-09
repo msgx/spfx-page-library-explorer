@@ -9,6 +9,7 @@ import {
 	PropertyPaneLabel
 } from "@microsoft/sp-property-pane";
 import { sp } from "@pnp/sp";
+import { Logger, LogLevel, ConsoleListener } from "@pnp/logging";
 
 import { Explorer } from "./components";
 import { SettingsDataService } from "./services";
@@ -28,9 +29,10 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		this.settingsState = { isLoading: false, hasError: false };
 	}
 
-	//TODO: add PnP Logger
 	protected async onInit(): Promise<void> {
 		sp.setup(this.context);
+		Logger.activeLogLevel = LogLevel.Warning;
+		Logger.subscribe(new ConsoleListener());
 		this.pageLibraryId = await SettingsDataService.getPageLibraryId(this.context);
 	}
 
@@ -112,6 +114,7 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		} catch (error) {
 			this.settingsState.hasError = true;
 			this.settingsState.errorMessage = error.message;
+			Logger.error(error);
 		}
 		this.setPropertyPaneLoading(false);
 	}
@@ -126,6 +129,7 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		} catch (error) {
 			this.settingsState.hasError = true;
 			this.settingsState.errorMessage = error.message;
+			Logger.error(error);
 		}
 		this.setPropertyPaneLoading(false);
 	}
