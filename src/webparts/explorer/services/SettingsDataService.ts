@@ -2,6 +2,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists/web";
+import "@pnp/sp/fields/list";
 import "@pnp/sp/content-types/list";
 import { IPageContentType, ITaxonomyField } from "../models";
 
@@ -16,6 +17,17 @@ export class SettingsDataService {
 	public static async getPageLibraryId(context: WebPartContext): Promise<string> {
 		const library = await sp.web.getList(`${context.pageContext.web.serverRelativeUrl}/SitePages`).select("Id").usingCaching()();
 		return library.Id;
+	}
+
+	/**
+	 * Gets identifier of the term set assigned to the taxonomy field
+	 * @param libraryId GUID of the library
+	 * @param fieldName Internal name of the taxonomy field
+	 * @returns GUID of the term set
+	 */
+	public static async getTaxonomyFieldTermSetId(libraryId: string, fieldName: string): Promise<string> {
+		const field = await sp.web.lists.getById(libraryId).fields.getByInternalNameOrTitle(fieldName).select("TermSetId").usingCaching()();
+		return field["TermSetId"] || null;
 	}
 
 	/**
@@ -43,8 +55,8 @@ export class SettingsDataService {
 			.getById(libraryId)
 			.contentTypes.getById(contentTypeId)
 			.fields.filter("startswith(TypeAsString,'TaxonomyFieldType')")
-			.select("InternalName,Title")
+			.select("InternalName,Title,TermSetId")
 			.usingCaching()();
-		return fields.map<ITaxonomyField>(f => ({ name: f.InternalName, title: f.Title }));
+		return fields.map<ITaxonomyField>(f => ({ name: f.InternalName, title: f.Title, termSetId: f.TermSetId }));
 	}
 }

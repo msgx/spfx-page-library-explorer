@@ -13,20 +13,24 @@ import { Logger, LogLevel, ConsoleListener } from "@pnp/logging";
 
 import { Explorer } from "./components";
 import { SettingsDataService } from "./services";
-import { IExplorerWebPartProperties, ISettingsState } from "./models";
+import { IExplorerWebPartProperties, ISettingsState, IHash } from "./models";
 import * as strings from "ExplorerWebPartStrings";
 
 export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebPartProperties> {
+	private termSetId: string;
 	private pageLibraryId: string;
 	private contentTypes: IPropertyPaneDropdownOption[];
 	private taxonomyFields: IPropertyPaneDropdownOption[];
 	private settingsState: ISettingsState;
+	private termSets: IHash<string>;
 
 	constructor() {
 		super();
+		this.termSetId = null;
 		this.contentTypes = [];
 		this.taxonomyFields = [];
 		this.settingsState = { isLoading: false, hasError: false };
+		this.termSets = {};
 	}
 
 	protected async onInit(): Promise<void> {
@@ -34,10 +38,15 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		Logger.activeLogLevel = LogLevel.Warning;
 		Logger.subscribe(new ConsoleListener());
 		this.pageLibraryId = await SettingsDataService.getPageLibraryId(this.context);
+		if (this.properties.taxonomyFieldName) {
+			console.log("onInit(): detecting term set ID...");
+			this.termSetId = await SettingsDataService.getTaxonomyFieldTermSetId(this.pageLibraryId, this.properties.taxonomyFieldName);
+		}
 	}
 
 	public render(): void {
 		const element: React.ReactElement = React.createElement(Explorer, {
+			termSetId: this.termSetId,
 			pageLibraryId: this.pageLibraryId,
 			pageContentTypeId: this.properties.pageContentTypeId,
 			taxonomyFieldName: this.properties.taxonomyFieldName
@@ -57,8 +66,12 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 	protected async onPropertyPaneFieldChanged(propertyPath: string, oldValue: unknown, newValue: unknown): Promise<void> {
 		if (propertyPath === "pageContentTypeId" && newValue != oldValue) {
 			this.taxonomyFields = [];
+			this.termSetId = null;
 			this.properties.taxonomyFieldName = null;
 			await this.loadFields(newValue as string);
+		}
+		if (propertyPath === "taxonomyFieldName" && newValue != oldValue) {
+			this.termSetId = this.termSets[newValue as string];
 		}
 	}
 
@@ -123,6 +136,7 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		this.setPropertyPaneLoading(true);
 		try {
 			const taxonomyFields = await SettingsDataService.getTaxonomyFields(this.pageLibraryId, contentTypeId);
+			this.termSets = taxonomyFields.reduce((acc, next) => ({ ...acc, [next.name]: next.termSetId }), {});
 			this.taxonomyFields = taxonomyFields
 				.map<IPropertyPaneDropdownOption>(f => ({ key: f.name, text: f.title }))
 				.sort(this.dropdownOptionComparator);

@@ -3,7 +3,7 @@ import * as strings from "ExplorerWebPartStrings";
 import { IExplorerProps } from "../models";
 import styles from "./styles.module.scss";
 
-export const Explorer: React.FC<IExplorerProps> = ({ pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => (
+export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => (
 	<div className={styles.explorer}>
 		<h1 className={styles.title}>{strings.webPartTitle}</h1>
 		<div className={styles.grid} dir="ltr">
@@ -17,6 +17,9 @@ export const Explorer: React.FC<IExplorerProps> = ({ pageLibraryId, pageContentT
 					</p>
 					<p>
 						<b>Taxonomy field:</b> <span>{String(taxonomyFieldName) || "(empty)"}</span>
+					</p>
+					<p>
+						<b>Term set:</b> <span>{String(termSetId)}</span>
 					</p>
 				</div>
 			</div>
