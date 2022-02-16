@@ -10,6 +10,11 @@ export interface IExplorerProps {
 	taxonomyFieldName: string;
 }
 
+export interface IStubProps {
+	isEditMode: boolean;
+	onConfigure(): void;
+}
+
 export interface IPageContentType {
 	id: string;
 	title: string;

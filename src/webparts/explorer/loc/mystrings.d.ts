@@ -1,6 +1,9 @@
 declare interface IExplorerWebPartStrings {
-	webPartTitle: string;
+	webPartName: string;
 	genericErrorMessage: string;
+	stubConfigureButtonText: string;
+	stubNotConfiguredText: string;
+	stubInstructionsText: string;
 	propertyPaneDescription: string;
 	propertyPaneContentType: string;
 	propertyPaneTaxonomyField: string;

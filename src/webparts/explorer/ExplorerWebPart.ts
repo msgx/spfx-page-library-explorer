@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
+import { DisplayMode } from "@microsoft/sp-core-library";
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import {
 	IPropertyPaneConfiguration,
@@ -11,7 +12,7 @@ import {
 import { sp } from "@pnp/sp";
 import { Logger, LogLevel, ConsoleListener } from "@pnp/logging";
 
-import { Explorer } from "./components";
+import { Explorer, Stub } from "./components";
 import { SettingsDataService } from "./services";
 import { IExplorerWebPartProperties, ISettingsState, IHash } from "./models";
 import * as strings from "ExplorerWebPartStrings";
@@ -27,10 +28,29 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 	constructor() {
 		super();
 		this.termSetId = null;
+		this.pageLibraryId = null;
 		this.contentTypes = [];
 		this.taxonomyFields = [];
 		this.settingsState = { isLoading: false, hasError: false };
 		this.termSets = {};
+	}
+
+	public render(): void {
+		let element: React.ReactElement;
+		if (this.isConfigured) {
+			element = React.createElement(Explorer, {
+				termSetId: this.termSetId,
+				pageLibraryId: this.pageLibraryId,
+				pageContentTypeId: this.properties.pageContentTypeId,
+				taxonomyFieldName: this.properties.taxonomyFieldName
+			});
+		} else {
+			element = React.createElement(Stub, {
+				isEditMode: this.displayMode === DisplayMode.Edit,
+				onConfigure: this.openPropertyPane.bind(this)
+			});
+		}
+		ReactDom.render(element, this.domElement);
 	}
 
 	protected async onInit(): Promise<void> {
@@ -39,19 +59,8 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		Logger.subscribe(new ConsoleListener());
 		this.pageLibraryId = await SettingsDataService.getPageLibraryId(this.context);
 		if (this.properties.taxonomyFieldName) {
-			console.log("onInit(): detecting term set ID...");
 			this.termSetId = await SettingsDataService.getTaxonomyFieldTermSetId(this.pageLibraryId, this.properties.taxonomyFieldName);
 		}
-	}
-
-	public render(): void {
-		const element: React.ReactElement = React.createElement(Explorer, {
-			termSetId: this.termSetId,
-			pageLibraryId: this.pageLibraryId,
-			pageContentTypeId: this.properties.pageContentTypeId,
-			taxonomyFieldName: this.properties.taxonomyFieldName
-		});
-		ReactDom.render(element, this.domElement);
 	}
 
 	protected async onPropertyPaneConfigurationStart(): Promise<void> {
@@ -117,6 +126,10 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		ReactDom.unmountComponentAtNode(this.domElement);
 	}
 
+	private get isConfigured(): boolean {
+		return Boolean(this.properties.pageContentTypeId && this.properties.taxonomyFieldName);
+	}
+
 	private async loadContentTypes(): Promise<void> {
 		this.setPropertyPaneLoading(true);
 		try {
@@ -151,6 +164,12 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 	private setPropertyPaneLoading(isLoading: boolean): void {
 		this.settingsState.isLoading = isLoading;
 		this.context.propertyPane.refresh();
+	}
+
+	private openPropertyPane(): void {
+		if (!this.context.propertyPane.isPropertyPaneOpen()) {
+			this.context.propertyPane.open();
+		}
 	}
 
 	private dropdownOptionComparator(a: IPropertyPaneDropdownOption, b: IPropertyPaneDropdownOption): number {

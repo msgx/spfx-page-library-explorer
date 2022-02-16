@@ -1,23 +1,54 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 
-.explorer {
-	$gutter: 8px;
+$gutter: 8px;
 
+.explorer {
 	.grid {
 		@include ms-Grid;
 	}
 
 	.row {
 		@include ms-Grid-row;
-		margin-bottom: 24px;
 	}
 
 	.column {
 		@include ms-Grid-col;
 		@include ms-sm12;
+
+		p {
+			margin: 0 0 $gutter / 2;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
 
 	.title {
 		@include ms-font-xxl;
+	}
+}
+
+.stub {
+	padding: $gutter / 2;
+
+	%row {
+		display: flex;
+		justify-content: center;
+	}
+
+	.head {
+		@extend %row;
+		font-size: "[theme:xLargePlusFontSize, default: 24px]";
+	}
+
+	.info {
+		@extend %row;
+		font-size: "[theme:mediumFontSize, default: 14px]";
+		text-align: center;
+	}
+
+	.icon {
+		margin-right: $gutter;
+		font-size: "[theme:xxLargePlusFontSize, default: 32px]";
 	}
 }

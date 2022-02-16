@@ -5,7 +5,7 @@ import styles from "./styles.module.scss";
 
 export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => (
 	<div className={styles.explorer}>
-		<h1 className={styles.title}>{strings.webPartTitle}</h1>
+		<h1 className={styles.title}>{strings.webPartName}</h1>
 		<div className={styles.grid} dir="ltr">
 			<div className={styles.row}>
 				<div className={styles.column}>
@@ -13,10 +13,10 @@ export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, p
 						<b>Library:</b> <span>{String(pageLibraryId)}</span>
 					</p>
 					<p>
-						<b>Content type:</b> <span>{String(pageContentTypeId) || "(empty)"}</span>
+						<b>Content type:</b> <span>{String(pageContentTypeId)}</span>
 					</p>
 					<p>
-						<b>Taxonomy field:</b> <span>{String(taxonomyFieldName) || "(empty)"}</span>
+						<b>Taxonomy field:</b> <span>{String(taxonomyFieldName)}</span>
 					</p>
 					<p>
 						<b>Term set:</b> <span>{String(termSetId)}</span>
