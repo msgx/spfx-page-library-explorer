@@ -6,6 +6,18 @@
 		"version": "0.1.0.0",
 		"iconPath": "appicon.png",
 		"includeClientSideAssets": true,
+		"features": [
+			{
+				"id": "b491a889-d3dd-4616-b6ee-ea5f2cf6b40e",
+				"version": "0.1.0.0",
+				"title": "Explorer SPFx web part feature",
+				"description": "This feature activates elements of the Explorer solution."
+			}
+		],
+		"metadata": {
+			"shortDescription": { "default": "Explorer SPFx web part" },
+			"longDescription": { "default": "SharePoint web part that allows to navigate the current site's page library." }
+		},
 		"developer": {
 			"name": "Alisher Abdurakhmanov",
 			"websiteUrl": "",
