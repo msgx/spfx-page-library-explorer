@@ -1,21 +1,20 @@
 import { sp } from "@pnp/sp";
 import "@pnp/sp/taxonomy";
 import { IOrderedTermInfo } from "@pnp/sp/taxonomy";
-import { INavLink, INavLinkGroup } from "office-ui-fabric-react/lib/Nav";
+import { ITreeItem } from "@pnp/spfx-controls-react/lib/TreeView";
+
+function toTreeItem(term: IOrderedTermInfo): ITreeItem {
+	const item: ITreeItem = { key: term.id, label: term.defaultLabel };
+	if (term.childrenCount > 0) {
+		item.children = term.children.map<ITreeItem>(t => toTreeItem(t));
+	}
+	return item;
+}
 
 export class NavDataService {
-	public static async getNavigation(termSetId: string): Promise<INavLinkGroup[]> {
+	public static async getNavigation(termSetId: string): Promise<ITreeItem[]> {
 		// TODO: cache terms
 		const terms = await sp.termStore.sets.getById(termSetId).getAllChildrenAsOrderedTree();
-		const links = terms.map<INavLink>(t => this.toNavLink(t));
-		return [{ links }];
-	}
-
-	private static toNavLink(term: IOrderedTermInfo): INavLink {
-		const link: INavLink = { key: term.id, name: term.defaultLabel, url: null };
-		if (term.childrenCount > 0) {
-			link.links = term.children.map<INavLink>(t => this.toNavLink(t));
-		}
-		return link;
+		return terms.map<ITreeItem>(t => toTreeItem(t));
 	}
 }

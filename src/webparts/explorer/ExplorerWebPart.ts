@@ -11,6 +11,7 @@ import {
 } from "@microsoft/sp-property-pane";
 import { sp } from "@pnp/sp";
 import { Logger, LogLevel, ConsoleListener } from "@pnp/logging";
+import pnpTelemetry from "@pnp/telemetry-js";
 
 import { Explorer, Stub } from "./components";
 import { SettingsDataService } from "./services";
@@ -54,9 +55,15 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 	}
 
 	protected async onInit(): Promise<void> {
+		// configure PnP library
 		sp.setup(this.context);
+		// register PnP logging
 		Logger.activeLogLevel = LogLevel.Warning;
 		Logger.subscribe(new ConsoleListener());
+		// disable PnP telemetry
+		const telemetry = pnpTelemetry.getInstance();
+		telemetry.optOut();
+		// initialize web part
 		this.pageLibraryId = await SettingsDataService.getPageLibraryId(this.context);
 		if (this.properties.taxonomyFieldName) {
 			this.termSetId = await SettingsDataService.getTaxonomyFieldTermSetId(this.pageLibraryId, this.properties.taxonomyFieldName);

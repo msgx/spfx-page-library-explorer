@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as strings from "ExplorerWebPartStrings";
-import { Nav, INavLinkGroup } from "office-ui-fabric-react/lib/Nav";
+import { TreeView, ITreeItem, TreeViewSelectionMode } from "@pnp/spfx-controls-react/lib/TreeView";
 import { NavDataService } from "../services";
 import { IExplorerProps } from "../models";
 import styles from "./styles.module.scss";
 
 export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => {
-	const [links, setLinks] = React.useState<INavLinkGroup[]>([]);
+	const [items, setItems] = React.useState<ITreeItem[]>([]);
 
 	React.useEffect(() => {
-		NavDataService.getNavigation(termSetId).then(nav => setLinks(nav));
+		NavDataService.getNavigation(termSetId).then(nav => setItems(nav));
 	}, [termSetId]);
 
 	return (
@@ -30,7 +30,7 @@ export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, p
 						<p>
 							<b>Term set:</b> <span>{String(termSetId)}</span>
 						</p>
-						<Nav groups={links} />
+						<TreeView items={items} showCheckboxes={false} defaultExpanded={false} selectionMode={TreeViewSelectionMode.Single} />
 					</div>
 				</div>
 			</div>
