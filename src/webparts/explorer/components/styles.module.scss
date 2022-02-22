@@ -3,17 +3,15 @@
 $gutter: 8px;
 
 .explorer {
-	.grid {
-		@include ms-Grid;
+	.title {
+		font-size: "[theme:xxLargeFontSize, default: 28px]";
 	}
 
-	.row {
-		@include ms-Grid-row;
-	}
-
-	.column {
-		@include ms-Grid-col;
-		@include ms-sm12;
+	.debug {
+		margin-top: $gutter * 2;
+		padding: $gutter;
+		border: 1px solid "[theme:themePrimary, default: #a4262c]";
+		font-size: "[theme:tinyFontSize, default: 10px]";
 
 		p {
 			margin: 0 0 $gutter / 2;
@@ -21,10 +19,6 @@ $gutter: 8px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-	}
-
-	.title {
-		@include ms-font-xxl;
 	}
 }
 

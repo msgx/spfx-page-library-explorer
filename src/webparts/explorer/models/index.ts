@@ -20,6 +20,17 @@ export interface IPageContentType {
 	title: string;
 }
 
+export interface IPageDetails {
+	id: number;
+	url: string;
+	title: string;
+	filename: string;
+}
+
+export interface IPageListProps {
+	pages: IPageDetails[];
+}
+
 export interface ITaxonomyField {
 	name: string;
 	title: string;
