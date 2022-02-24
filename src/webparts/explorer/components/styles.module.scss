@@ -4,6 +4,7 @@ $gutter: 8px;
 
 .explorer {
 	.title {
+		margin: 0 0 $gutter * 2;
 		font-size: "[theme:xxLargeFontSize, default: 28px]";
 	}
 
@@ -19,6 +20,24 @@ $gutter: 8px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
+	}
+}
+
+.pages {
+	padding: $gutter * 2 $gutter;
+
+	.selected {
+		margin: 0 0 $gutter;
+		font-size: "[theme:mediumPlusFontSize, default: 16px]";
+	}
+
+	.gridRow {
+		display: flex;
+		align-items: stretch;
+	}
+
+	.gridCell {
+		padding: $gutter / 2;
 	}
 }
 

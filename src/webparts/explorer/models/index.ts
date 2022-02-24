@@ -27,8 +27,18 @@ export interface IPageDetails {
 	filename: string;
 }
 
-export interface IPageListProps {
+export interface IPageList {
+	title: string;
 	pages: IPageDetails[];
+}
+
+export interface IPageListProps {
+	title: string;
+	pages: IPageDetails[];
+}
+
+export interface IPageItemProps {
+	item: IPageDetails;
 }
 
 export interface ITaxonomyField {

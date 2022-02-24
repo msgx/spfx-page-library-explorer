@@ -4,12 +4,13 @@ import { Stack } from "office-ui-fabric-react/lib/Stack";
 import { TreeView, ITreeItem, TreeViewSelectionMode } from "@pnp/spfx-controls-react/lib/TreeView";
 import { PageList } from "../components";
 import { NavDataService } from "../services";
-import { IExplorerProps, IPageDetails } from "../models";
+import { IExplorerProps, IPageList } from "../models";
 import styles from "./styles.module.scss";
 
 export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => {
+	const emptyList: IPageList = { title: null, pages: [] };
 	const [navItems, setNavItems] = React.useState<ITreeItem[]>([]);
-	const [pages, setPages] = React.useState<IPageDetails[]>([]);
+	const [pageList, setPageList] = React.useState<IPageList>(emptyList);
 
 	React.useEffect(() => {
 		NavDataService.getNavigation(termSetId).then(nav => setNavItems(nav));
@@ -18,12 +19,10 @@ export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, p
 	const onItemSelect = React.useCallback(async (items: ITreeItem[]) => {
 		const item = items && items.length ? items[0] : null;
 		if (item) {
-			console.log(`selected: ${item.label} (${item.key})`);
 			const showPages = await NavDataService.getPages(pageLibraryId, item.key);
-			setPages(showPages);
+			setPageList({ title: item.label, pages: showPages });
 		} else {
-			console.log("no items selected");
-			setPages([]);
+			setPageList(emptyList);
 		}
 	}, []);
 
@@ -31,8 +30,12 @@ export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, p
 		<div className={styles.explorer}>
 			<h1 className={styles.title}>{strings.webPartName}</h1>
 			<Stack horizontal>
-				<TreeView items={navItems} onSelect={onItemSelect} showCheckboxes={false} selectionMode={TreeViewSelectionMode.Single} />
-				<PageList pages={pages} />
+				<Stack.Item grow={1}>
+					<TreeView items={navItems} onSelect={onItemSelect} showCheckboxes={false} selectionMode={TreeViewSelectionMode.Single} />
+				</Stack.Item>
+				<Stack.Item grow={4}>
+					<PageList title={pageList.title} pages={pageList.pages} />
+				</Stack.Item>
 			</Stack>
 			<div className={styles.debug}>
 				<p>

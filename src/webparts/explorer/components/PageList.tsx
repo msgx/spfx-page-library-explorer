@@ -1,19 +1,27 @@
 import * as React from "react";
-import { Link } from "office-ui-fabric-react/lib/Link";
-import { IPageListProps } from "../models";
+import { List } from "office-ui-fabric-react/lib/List";
+import { PageItem } from "../components";
+import { IPageListProps, IPageDetails } from "../models";
+import styles from "./styles.module.scss";
 
-export const PageList: React.FC<IPageListProps> = ({ pages }: IPageListProps) => {
+export const PageList: React.FC<IPageListProps> = ({ title, pages }: IPageListProps) => {
+	const renderPageItem = React.useCallback((item: IPageDetails) => <PageItem item={item} />, []);
+
+	if (!title) {
+		return <div className={styles.pages}>No item selected.</div>;
+	}
+
 	if (pages && pages.length) {
 		return (
-			<ul>
-				{pages.map(p => (
-					<li key={p.id}>
-						<Link href={p.url}>{p.title}</Link>
-					</li>
-				))}
-			</ul>
+			<div className={styles.pages}>
+				<List items={pages} onRenderCell={renderPageItem} />
+			</div>
 		);
 	} else {
-		return <div>No pages found.</div>;
+		return (
+			<div className={styles.pages}>
+				<span>No pages found.</span>
+			</div>
+		);
 	}
 };
