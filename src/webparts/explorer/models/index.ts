@@ -1,9 +1,11 @@
 export interface IExplorerWebPartProperties {
+	title: string;
 	pageContentTypeId: string;
 	taxonomyFieldName: string;
 }
 
 export interface IExplorerProps {
+	title: string;
 	termSetId: string;
 	pageLibraryId: string;
 	pageContentTypeId: string;

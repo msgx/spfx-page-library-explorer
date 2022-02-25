@@ -4,7 +4,7 @@ $gutter: 8px;
 
 .explorer {
 	.title {
-		margin: 0 0 $gutter * 2;
+		margin: 0 0 $gutter;
 		font-size: "[theme:xxLargeFontSize, default: 28px]";
 	}
 
@@ -36,6 +36,7 @@ $gutter: 8px;
 		align-items: stretch;
 	}
 
+	// TODO: set text-overflow to ellipsis
 	.gridCell {
 		padding: $gutter / 2;
 	}

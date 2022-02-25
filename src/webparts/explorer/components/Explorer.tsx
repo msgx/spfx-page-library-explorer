@@ -1,41 +1,35 @@
 import * as React from "react";
-import * as strings from "ExplorerWebPartStrings";
 import { Stack } from "office-ui-fabric-react/lib/Stack";
 import { TreeView, ITreeItem, TreeViewSelectionMode } from "@pnp/spfx-controls-react/lib/TreeView";
 import { PageList } from "../components";
 import { NavDataService } from "../services";
-import { IExplorerProps, IPageList } from "../models";
+import { IExplorerProps, IPageDetails } from "../models";
 import styles from "./styles.module.scss";
 
-export const Explorer: React.FC<IExplorerProps> = ({ termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => {
-	const emptyList: IPageList = { title: null, pages: [] };
+export const Explorer: React.FC<IExplorerProps> = ({ title, termSetId, pageLibraryId, pageContentTypeId, taxonomyFieldName }: IExplorerProps) => {
 	const [navItems, setNavItems] = React.useState<ITreeItem[]>([]);
-	const [pageList, setPageList] = React.useState<IPageList>(emptyList);
+	const [selected, setSelected] = React.useState<ITreeItem>(null);
+	const [pages, setPages] = React.useState<IPageDetails[]>([]);
 
 	React.useEffect(() => {
 		NavDataService.getNavigation(termSetId).then(nav => setNavItems(nav));
 	}, [termSetId]);
 
-	const onItemSelect = React.useCallback(async (items: ITreeItem[]) => {
+	const selectNavItem = React.useCallback(async (items: ITreeItem[]) => {
 		const item = items && items.length ? items[0] : null;
-		if (item) {
-			const showPages = await NavDataService.getPages(pageLibraryId, item.key);
-			setPageList({ title: item.label, pages: showPages });
-		} else {
-			setPageList(emptyList);
-		}
+		const showPages = item ? await NavDataService.getPages(pageLibraryId, item.key) : [];
+		setSelected(item);
+		setPages(showPages);
 	}, []);
 
 	return (
 		<div className={styles.explorer}>
-			<h1 className={styles.title}>{strings.webPartName}</h1>
+			{Boolean(title) && <h1 className={styles.title}>{title}</h1>}
 			<Stack horizontal>
 				<Stack.Item grow={1}>
-					<TreeView items={navItems} onSelect={onItemSelect} showCheckboxes={false} selectionMode={TreeViewSelectionMode.Single} />
+					<TreeView items={navItems} onSelect={selectNavItem} showCheckboxes={false} selectionMode={TreeViewSelectionMode.Single} />
 				</Stack.Item>
-				<Stack.Item grow={4}>
-					<PageList title={pageList.title} pages={pageList.pages} />
-				</Stack.Item>
+				<Stack.Item grow={4}>{selected ? <PageList pages={pages} title={selected.label} /> : <div>No item selected.</div>}</Stack.Item>
 			</Stack>
 			<div className={styles.debug}>
 				<p>

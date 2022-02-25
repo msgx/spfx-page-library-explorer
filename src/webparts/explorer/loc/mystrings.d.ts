@@ -5,6 +5,7 @@ declare interface IExplorerWebPartStrings {
 	stubNotConfiguredText: string;
 	stubInstructionsText: string;
 	propertyPaneDescription: string;
+	propertyPaneTitle: string;
 	propertyPaneContentType: string;
 	propertyPaneTaxonomyField: string;
 	propertyPaneWarningMessage: string;

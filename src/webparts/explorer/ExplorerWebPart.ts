@@ -6,6 +6,7 @@ import {
 	IPropertyPaneConfiguration,
 	IPropertyPaneDropdownOption,
 	IPropertyPaneField,
+	PropertyPaneTextField,
 	PropertyPaneDropdown,
 	PropertyPaneLabel
 } from "@microsoft/sp-property-pane";
@@ -40,6 +41,7 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 		let element: React.ReactElement;
 		if (this.isConfigured) {
 			element = React.createElement(Explorer, {
+				title: this.properties.title,
 				termSetId: this.termSetId,
 				pageLibraryId: this.pageLibraryId,
 				pageContentTypeId: this.properties.pageContentTypeId,
@@ -56,7 +58,7 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 
 	protected async onInit(): Promise<void> {
 		// configure PnP library
-		sp.setup(this.context);
+		sp.setup(this.context); // TODO: configure caching
 		// register PnP logging
 		Logger.activeLogLevel = LogLevel.Warning;
 		Logger.subscribe(new ConsoleListener());
@@ -97,6 +99,10 @@ export default class ExplorerWebPart extends BaseClientSideWebPart<IExplorerWebP
 			fields.push(PropertyPaneLabel(null, { text: this.settingsState.errorMessage || strings.genericErrorMessage }));
 		} else {
 			fields.push(
+				PropertyPaneTextField("title", {
+					label: strings.propertyPaneTitle,
+					maxLength: 255
+				}),
 				PropertyPaneDropdown("pageContentTypeId", {
 					options: this.contentTypes,
 					label: strings.propertyPaneContentType
